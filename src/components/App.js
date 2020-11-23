@@ -1,21 +1,23 @@
-import React, { useState, useLayoutEffect, useRef } from 'react'
+import React, { useRef, useState, useLayoutEffect } from 'react'
 import TitleBar from './TitleBar'
 import TreeSpace from './TreeSpace'
-import tree from '../testData/famTree.json'
+
+import data from '../testData/famTree.json'
+
+import '../css/App.css'
 
 const App = props => {
-  const [height, setHeight] = useState(0)
-  const titleBarRef = useRef(null)
+  const [titleHeight, setTitleHeight] = useState(0)
+  const titleRef = useRef(null)
 
   useLayoutEffect(() => {
-    setHeight(titleBarRef.clientHeight)
-  })
+    if (titleRef.current) { setTitleHeight(titleRef.current.offsetHeight) }
+  }, [titleRef])
 
   return (
     <>
-      <TitleBar ref={titleBarRef}/>
-      {height+'height'}
-      <TreeSpace tree={tree} />
+      <TitleBar ref={titleRef} />
+      <TreeSpace data={data} titleHeight={titleHeight} />
     </>
   )
 }

@@ -1,10 +1,10 @@
-import ScrollContainer from 'react-indiana-drag-scroll'
 
 const TreeSpace = props => {
+  const { titleHeight = 0 } = props
   return (
-    <ScrollContainer style={{ height: '100%' }}>
-      {'This is the actual tree space.'.repeat(1000)}
-    </ScrollContainer>
+    <div style={{ height: `calc(100% - ${titleHeight}px)` }}>
+      
+    </div>
   )
 }
 
