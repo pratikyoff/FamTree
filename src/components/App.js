@@ -12,7 +12,7 @@ const App = props => {
 
   useLayoutEffect(() => {
     if (titleRef.current) { setTitleHeight(titleRef.current.offsetHeight) }
-  }, [titleRef])
+  })
 
   return (
     <>
