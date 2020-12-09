@@ -1,6 +1,21 @@
-[
-  {
-    "id": "kuVISwh7w",
-    "gender": "male"
-  }
-]
+{
+  "name": "Kapil Deo Prasad",
+  "children": [
+    {
+      "name": "Sushil",
+      "children": [{ "name": "Navya" }, { "name": "Suryansh" }]
+    },
+    {
+      "name": "Sudhir",
+      "children": [{ "name": "Shreya" }, { "name": "Shristi" }]
+    },
+    {
+      "name": "Manoj",
+      "children": [{ "name": "Mayank" }]
+    },
+    {
+      "name": "Sanjay",
+      "children": [{ "name": "Appu" }, { "name": "Bittu" }]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useLayoutEffect } from 'react'
 import TitleBar from './TitleBar'
-import TreeSpace from './TreeSpace'
+import TreeAndPanel from './TreeAndPanel'
 
 import data from '../testData/famTree.json'
 
@@ -12,12 +12,12 @@ const App = props => {
 
   useLayoutEffect(() => {
     if (titleRef.current) { setTitleHeight(titleRef.current.offsetHeight) }
-  })
+  }, [])
 
   return (
     <>
       <TitleBar ref={titleRef} />
-      <TreeSpace data={data} titleHeight={titleHeight} />
+      <TreeAndPanel data={data} titleHeight={titleHeight} />
     </>
   )
 }
