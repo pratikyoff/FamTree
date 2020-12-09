@@ -1,21 +1,26 @@
 {
-  "name": "Kapil Deo Prasad",
+  "name": "Kapil Dev Prasad",
+  "spouse": {"name": "Chintamani Devi"},
   "children": [
     {
       "name": "Sushil",
+      "spouse": { "name": "Anju" },
       "children": [{ "name": "Navya" }, { "name": "Suryansh" }]
     },
     {
       "name": "Sudhir",
+      "spouse": { "name": "Gudiya" },
       "children": [{ "name": "Shreya" }, { "name": "Shristi" }]
     },
     {
       "name": "Manoj",
+      "spouse": { "name": "Mamta" },
       "children": [{ "name": "Mayank" }]
     },
     {
       "name": "Sanjay",
-      "children": [{ "name": "Appu" }, { "name": "Bittu" }]
+      "spouse": { "name": "Meena" },
+      "children": [{ "name": "Appu"}, { "name": "Bittu" }]
     }
   ]
 }
