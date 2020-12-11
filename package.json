@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.21.0",
     "bootstrap": "^4.5.3",
     "d3-hierarchy": "^2.0.0",
     "d3-selection": "^2.0.0",
@@ -39,5 +40,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "homepage": "https://pratikyoff.github.io/"
 }
