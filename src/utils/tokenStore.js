@@ -1,4 +1,4 @@
-/* global localStorage, atob */
+const { localStorage, atob } = global
 
 export const setToken = token => localStorage.setItem('token', token)
 

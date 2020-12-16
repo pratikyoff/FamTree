@@ -2,16 +2,28 @@ import { forwardRef, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
+import Dropdown from 'react-bootstrap/Dropdown'
 import { login } from '../utils/famtreeService'
+import { map } from 'lodash'
 
 const TitleBar = forwardRef((props, ref) => {
+  const { stratifiedFamilies, selectedFamily, setSelectedFamily } = props
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   return (
     <>
       <div ref={ref} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <span style={{ fontWeight: 'bold', marginRight: 'auto', fontSize: '20px' }}>FamTree</span>
+        <div style={{ fontWeight: 'bold', marginRight: 'auto', fontSize: '20px' }}>FamTree</div>
+        <Dropdown onSelect={key => setSelectedFamily(key)}>
+          <Dropdown.Toggle variant='success' id='dropdown-basic'>
+            Family Root
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            {stratifiedFamilies && map(stratifiedFamilies,
+              sf => <Dropdown.Item key={sf.id} eventKey={sf.id} active={sf.id === selectedFamily}>{sf.data.name}</Dropdown.Item>)}
+          </Dropdown.Menu>
+        </Dropdown>
         <Button onClick={() => setShowLoginModal(true)}>Log In</Button>
       </div>
       <Modal show={showLoginModal} centered>

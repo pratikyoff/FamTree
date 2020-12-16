@@ -1,11 +1,17 @@
 import { useEffect, useRef } from 'react'
 import { select } from 'd3-selection'
-import { hierarchy, tree } from 'd3-hierarchy'
+import { tree } from 'd3-hierarchy'
 import { zoom } from 'd3-zoom'
+import { find, isEmpty } from 'lodash'
 
 const Tree = props => {
+  const { rawTreeData, stratifiedFamilies, selectedFamily } = props
+
   const svgRef = useRef(null)
-  useEffect(() => createD3Chart(svgRef, props.data), [props.data])
+  useEffect(() => {
+    if (isEmpty(rawTreeData) || isEmpty(stratifiedFamilies) || isEmpty(selectedFamily)) return
+    createD3Chart(svgRef, rawTreeData, stratifiedFamilies, selectedFamily)
+  }, [rawTreeData, stratifiedFamilies, selectedFamily])
   return (
     <svg ref={svgRef} height='100%' width='100%' />
   )
@@ -16,9 +22,10 @@ export default Tree
 const nodeWidth = 150
 const nodeHeight = 200
 
-const createD3Chart = ({ current }, data) => {
+const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFamily) => {
   const dom = select(current)
-  const rootNode = hierarchy(data)
+  dom.selectAll('*').remove()
+  const rootNode = find(stratifiedFamilies, sf => sf.id === selectedFamily)
   const famTree = tree(rootNode)
     .nodeSize([nodeWidth * 2, nodeHeight * 2])
     .separation((a, b) => b.data.spouse ? 1.5 : 1)
@@ -135,7 +142,7 @@ const createD3Chart = ({ current }, data) => {
     .join('text')
     .attr('x', d => d.x + spouseXOffset)
     .attr('y', d => d.y + nodeWidth + 5)
-    .text(d => d.data.spouse.name)
+    .text(d => find(rawTreeData, rtd => rtd.key === d.data.spouse).name)
 
   // image
   graphBase
