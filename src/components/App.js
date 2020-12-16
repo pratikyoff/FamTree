@@ -1,6 +1,7 @@
-import React, { useRef, useState, useLayoutEffect } from 'react'
+import React, { useRef, useState, useLayoutEffect, useEffect } from 'react'
 import TitleBar from './TitleBar'
-import TreeAndPanel from './TreeAndPanel'
+import Tree from './Tree'
+import InfoPanel from './InfoPanel'
 import { getAllFamilyMembers } from '../utils/famtreeService'
 import { filter, find, isEmpty } from 'lodash'
 import { getTokenData } from '../utils/tokenStore'
@@ -11,11 +12,14 @@ import '../css/App.css'
 const App = props => {
   const [titleHeight, setTitleHeight] = useState(0)
   const titleRef = useRef(null)
+  const [panelHeight, setPanelHeight] = useState(0)
+  const panelRef = useRef(null)
 
   const [rawTreeData, setRawTreeData] = useState({})
   const [stratifiedFamilies, setStratifiedFamilies] = useState([])
   const [selectedFamily, setSelectedFamily] = useState('')
-  if (isEmpty(rawTreeData)) {
+  useEffect(() => {
+    if (!isEmpty(rawTreeData)) return
     getAllFamilyMembers().then(rawData => {
       setRawTreeData(rawData)
       const user = getTokenData()
@@ -45,13 +49,13 @@ const App = props => {
       const rootNode = findParentRecursively(user, rawData)
       const selectedFam = rootNode.key
       setSelectedFamily(selectedFam)
-      console.log(stratifiedArray)
       setStratifiedFamilies(stratifiedArray)
     })
-  }
+  }, [])
 
   useLayoutEffect(() => {
     if (titleRef.current) { setTitleHeight(titleRef.current.offsetHeight) }
+    if (panelRef.current) { setPanelHeight(panelRef.current.offsetHeight) }
   }, [])
 
   return (
@@ -62,11 +66,14 @@ const App = props => {
         selectedFamily={selectedFamily}
         setSelectedFamily={setSelectedFamily}
       />
-      <TreeAndPanel
+      <Tree
         rawTreeData={rawTreeData}
         stratifiedFamilies={stratifiedFamilies}
         selectedFamily={selectedFamily}
-        titleHeight={titleHeight}
+        heightOffset={titleHeight + panelHeight}
+      />
+      <InfoPanel
+        ref={panelRef}
       />
     </>
   )

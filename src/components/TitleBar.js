@@ -1,10 +1,12 @@
 import { forwardRef, useState } from 'react'
+import Navbar from 'react-bootstrap/Navbar'
+import Nav from 'react-bootstrap/Nav'
+import NavDropdown from 'react-bootstrap/NavDropdown'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
-import Dropdown from 'react-bootstrap/Dropdown'
 import { login } from '../utils/famtreeService'
-import { map } from 'lodash'
+import { find, isEmpty, map } from 'lodash'
 
 const TitleBar = forwardRef((props, ref) => {
   const { stratifiedFamilies, selectedFamily, setSelectedFamily } = props
@@ -12,20 +14,30 @@ const TitleBar = forwardRef((props, ref) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   return (
-    <>
-      <div ref={ref} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <div style={{ fontWeight: 'bold', marginRight: 'auto', fontSize: '20px' }}>FamTree</div>
-        <Dropdown onSelect={key => setSelectedFamily(key)}>
-          <Dropdown.Toggle variant='success' id='dropdown-basic'>
-            Family Root
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            {stratifiedFamilies && map(stratifiedFamilies,
-              sf => <Dropdown.Item key={sf.id} eventKey={sf.id} active={sf.id === selectedFamily}>{sf.data.name}</Dropdown.Item>)}
-          </Dropdown.Menu>
-        </Dropdown>
-        <Button onClick={() => setShowLoginModal(true)}>Log In</Button>
-      </div>
+    <div ref={ref}>
+      <Navbar bg='light' variant='light' expand='lg'>
+        <Navbar.Brand>FamTree</Navbar.Brand>
+        <Navbar.Toggle aria-controls='basic-navbar-nav' />
+        <Navbar.Collapse id='basic-navbar-nav'>
+          <Nav className='justify-content-end' style={{ width: '100%' }}>
+            <NavDropdown
+              title={selectedFamily && !isEmpty(stratifiedFamilies) ? find(stratifiedFamilies, sf => sf.id === selectedFamily).data.name : 'Family Root'}
+              id='basic-nav-dropdown'
+              onSelect={key => setSelectedFamily(key)}
+            >
+              <NavDropdown.Item disabled>
+                <div style={{ fontWeight: 'bold', fontSize: '1.2em' }}>
+                  Family Root
+                </div>
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+              {stratifiedFamilies && map(stratifiedFamilies,
+                sf => <NavDropdown.Item key={sf.id} eventKey={sf.id} active={sf.id === selectedFamily}>{sf.data.name}</NavDropdown.Item>)}
+            </NavDropdown>
+            <Button variant='outline-dark' onClick={() => setShowLoginModal(true)}>Log In</Button>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
       <Modal show={showLoginModal} centered>
         <Modal.Body>
           <Form>
@@ -45,7 +57,7 @@ const TitleBar = forwardRef((props, ref) => {
 
         </Modal.Body>
       </Modal>
-    </>
+    </div>
   )
 })
 

@@ -5,7 +5,7 @@ import { zoom } from 'd3-zoom'
 import { find, isEmpty } from 'lodash'
 
 const Tree = props => {
-  const { rawTreeData, stratifiedFamilies, selectedFamily } = props
+  const { heightOffset = 0, rawTreeData, stratifiedFamilies, selectedFamily } = props
 
   const svgRef = useRef(null)
   useEffect(() => {
@@ -13,7 +13,9 @@ const Tree = props => {
     createD3Chart(svgRef, rawTreeData, stratifiedFamilies, selectedFamily)
   }, [rawTreeData, stratifiedFamilies, selectedFamily])
   return (
-    <svg ref={svgRef} height='100%' width='100%' />
+    <div style={{ height: `calc(100% - ${heightOffset}px)` }}>
+      <svg ref={svgRef} height='100%' width='100%' />
+    </div>
   )
 }
 
