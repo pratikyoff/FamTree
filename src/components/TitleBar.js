@@ -7,12 +7,14 @@ import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import { login } from '../utils/famtreeService'
 import { find, isEmpty, map } from 'lodash'
+import { getTokenData, setToken } from '../utils/tokenStore'
 
 const TitleBar = forwardRef((props, ref) => {
   const { stratifiedFamilies, selectedFamily, setSelectedFamily } = props
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const user = getTokenData()
   return (
     <div ref={ref}>
       <Navbar bg='light' variant='light' expand='lg'>
@@ -21,9 +23,12 @@ const TitleBar = forwardRef((props, ref) => {
         <Navbar.Collapse id='basic-navbar-nav'>
           <Nav className='justify-content-end' style={{ width: '100%' }}>
             <NavDropdown
-              title={selectedFamily && !isEmpty(stratifiedFamilies) ? find(stratifiedFamilies, sf => sf.id === selectedFamily).data.name : 'Family Root'}
+              title={selectedFamily && !isEmpty(stratifiedFamilies)
+                ? find(stratifiedFamilies, sf => sf.id === selectedFamily).data.name
+                : 'Family Root'}
               id='basic-nav-dropdown'
               onSelect={key => setSelectedFamily(key)}
+              style={{ marginRight: '5px' }}
             >
               <NavDropdown.Item disabled>
                 <div style={{ fontWeight: 'bold', fontSize: '1.2em' }}>
@@ -34,7 +39,13 @@ const TitleBar = forwardRef((props, ref) => {
               {stratifiedFamilies && map(stratifiedFamilies,
                 sf => <NavDropdown.Item key={sf.id} eventKey={sf.id} active={sf.id === selectedFamily}>{sf.data.name}</NavDropdown.Item>)}
             </NavDropdown>
-            <Button variant='outline-dark' onClick={() => setShowLoginModal(true)}>Log In</Button>
+            {user
+              ? <>
+                <Navbar.Text>{user.name}</Navbar.Text>
+                <Button variant='outline-danger' size='sm' style={{ marginLeft: '5px' }} onClick={() => setToken('')}>Log Out</Button>
+                {/* eslint-disable-next-line */}
+              </>
+              : <Button variant='outline-success' onClick={() => setShowLoginModal(true)}>Log In</Button>}
           </Nav>
         </Navbar.Collapse>
       </Navbar>
@@ -50,7 +61,7 @@ const TitleBar = forwardRef((props, ref) => {
               <Form.Label>Password</Form.Label>
               <Form.Control type='password' placeholder='Password' value={password} onChange={e => setPassword(e.target.value)} />
             </Form.Group>
-            <Button variant='primary' onClick={() => login(username, password)}>
+            <Button variant='primary' onClick={() => login(username, password).then(() => setShowLoginModal(false))}>
               Login
             </Button>
           </Form>

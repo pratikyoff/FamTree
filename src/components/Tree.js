@@ -48,17 +48,6 @@ const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFam
     .append('g')
     .attr('transform', `translate(${initialTranslate},0)`)
 
-  // border
-  // base
-  //   .append('g')
-  //   .append('rect')
-  //   .attr('x', 0)
-  //   .attr('y', 0)
-  //   .attr('width', graphWidth)
-  //   .attr('height', graphHeight)
-  //   .style('stroke', 'grey')
-  //   .style('fill', 'none')
-
   const descendants = nodes.descendants()
 
   // node border
@@ -71,8 +60,7 @@ const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFam
     .attr('y', d => d.y)
     .attr('width', nodeWidth)
     .attr('height', nodeHeight)
-    .style('fill', 'none')
-    .style('stroke', 'black')
+    .attr('class', d => d.data.gender)
 
   // paths
   graphBase
@@ -81,6 +69,7 @@ const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFam
     .data(nodes.links())
     .join('path')
     .style('stroke', 'blue')
+    .style('stroke-width', '2px')
     .style('fill', 'none')
     .attr('d', d => `
     M ${d.source.x + nodeWidth / 2} ${d.source.y + nodeHeight}
@@ -95,9 +84,10 @@ const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFam
     .selectAll('text')
     .data(descendants)
     .join('text')
-    .attr('x', d => d.x)
-    .attr('y', d => d.y + nodeWidth + 5)
+    .attr('x', d => d.x + 10)
+    .attr('y', d => d.y + nodeWidth + 20)
     .text(d => d.data.name)
+    .style('font-weight', '500')
 
   // image
   graphBase
@@ -109,7 +99,7 @@ const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFam
     .attr('y', d => d.y)
     .attr('width', nodeWidth)
     .attr('height', nodeWidth)
-    .attr('href', 'https://www.pngitem.com/pimgs/m/150-1503945_transparent-user-png-default-user-image-png-png.png')
+    .attr('href', 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Solid_black.svg/240px-Solid_black.svg.png')
 
   // spouse --------------------------------------------------------------------------------------
   const spouseXOffset = nodeWidth + 20
@@ -123,8 +113,7 @@ const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFam
     .attr('y', d => d.y)
     .attr('width', nodeWidth)
     .attr('height', nodeHeight)
-    .style('fill', 'none')
-    .style('stroke', 'black')
+    .attr('class', d => find(rawTreeData, des => des.key === d.data.spouse).gender)
 
   graphBase
     .append('g')
@@ -142,9 +131,10 @@ const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFam
     .selectAll('text')
     .data(spouseNodes)
     .join('text')
-    .attr('x', d => d.x + spouseXOffset)
-    .attr('y', d => d.y + nodeWidth + 5)
+    .attr('x', d => d.x + spouseXOffset + 10)
+    .attr('y', d => d.y + nodeWidth + 20)
     .text(d => find(rawTreeData, rtd => rtd.key === d.data.spouse).name)
+    .style('font-weight', '500')
 
   // image
   graphBase
@@ -156,5 +146,5 @@ const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFam
     .attr('y', d => d.y)
     .attr('width', nodeWidth)
     .attr('height', nodeWidth)
-    .attr('href', 'https://www.pngitem.com/pimgs/m/150-1503945_transparent-user-png-default-user-image-png-png.png')
+    .attr('href', 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Solid_black.svg/240px-Solid_black.svg.png')
 }

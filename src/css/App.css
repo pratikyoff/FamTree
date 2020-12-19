@@ -1,3 +1,16 @@
 html, body, #root {
   height: 100%;
 }
+
+.m{
+  fill: #75d0ff;
+  stroke: #0c6b9b;
+  stroke-width: 3px;
+}
+
+.f{
+  fill: #ecb8d6;
+  stroke: #881558;
+  stroke-width: 3px;
+}
+
