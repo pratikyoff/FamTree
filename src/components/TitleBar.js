@@ -5,12 +5,12 @@ import NavDropdown from 'react-bootstrap/NavDropdown'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
-import { login } from '../utils/famtreeService'
+import { fetchAndSetFamilies, login } from '../utils/famtreeService'
 import { find, isEmpty, map } from 'lodash'
 import { getTokenData, setToken } from '../utils/tokenStore'
 
 const TitleBar = forwardRef((props, ref) => {
-  const { stratifiedFamilies, selectedFamily, setSelectedFamily } = props
+  const { setRawTreeData, stratifiedFamilies, setStratifiedFamilies, selectedFamily, setSelectedFamily } = props
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -42,10 +42,26 @@ const TitleBar = forwardRef((props, ref) => {
             {user
               ? <>
                 <Navbar.Text>{user.name}</Navbar.Text>
-                <Button variant='outline-danger' size='sm' style={{ marginLeft: '5px' }} onClick={() => setToken('')}>Log Out</Button>
+                <Button
+                  variant='outline-danger'
+                  size='sm'
+                  style={{ marginLeft: '5px' }}
+                  onClick={() => {
+                    setToken('')
+                    window.location.reload()
+                  }}
+                >
+                  Log Out
+                </Button>
                 {/* eslint-disable-next-line */}
               </>
-              : <Button variant='outline-success' onClick={() => setShowLoginModal(true)}>Log In</Button>}
+              : <Button
+                  variant='outline-success'
+                  onClick={() => setShowLoginModal(true)}
+                >
+                Log In
+                {/* eslint-disable-next-line */}
+              </Button>}
           </Nav>
         </Navbar.Collapse>
       </Navbar>
@@ -61,7 +77,12 @@ const TitleBar = forwardRef((props, ref) => {
               <Form.Label>Password</Form.Label>
               <Form.Control type='password' placeholder='Password' value={password} onChange={e => setPassword(e.target.value)} />
             </Form.Group>
-            <Button variant='primary' onClick={() => login(username, password).then(() => setShowLoginModal(false))}>
+            <Button
+              variant='primary' onClick={() => login(username, password).then(() => {
+                setShowLoginModal(false)
+                fetchAndSetFamilies(setRawTreeData, setStratifiedFamilies, setSelectedFamily)
+              })}
+            >
               Login
             </Button>
           </Form>

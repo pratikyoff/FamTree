@@ -5,13 +5,13 @@ import { zoom } from 'd3-zoom'
 import { find, isEmpty } from 'lodash'
 
 const Tree = props => {
-  const { heightOffset = 0, rawTreeData, stratifiedFamilies, selectedFamily } = props
+  const { heightOffset = 0, rawTreeData, stratifiedFamilies, selectedFamily, setSelectedKey } = props
 
   const svgRef = useRef(null)
   useEffect(() => {
     if (isEmpty(rawTreeData) || isEmpty(stratifiedFamilies) || isEmpty(selectedFamily)) return
-    createD3Chart(svgRef, rawTreeData, stratifiedFamilies, selectedFamily)
-  }, [rawTreeData, stratifiedFamilies, selectedFamily])
+    createD3Chart(svgRef, rawTreeData, stratifiedFamilies, selectedFamily, setSelectedKey)
+  }, [rawTreeData, stratifiedFamilies, selectedFamily, setSelectedKey])
   return (
     <div style={{ height: `calc(100% - ${heightOffset}px)` }}>
       <svg ref={svgRef} height='100%' width='100%' />
@@ -24,7 +24,7 @@ export default Tree
 const nodeWidth = 150
 const nodeHeight = 200
 
-const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFamily) => {
+const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFamily, setSelectedKey) => {
   const dom = select(current)
   dom.selectAll('*').remove()
   const rootNode = find(stratifiedFamilies, sf => sf.id === selectedFamily)
@@ -89,6 +89,21 @@ const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFam
     .text(d => d.data.name)
     .style('font-weight', '500')
 
+  // age
+  graphBase
+    .append('g')
+    .selectAll('text')
+    .data(descendants)
+    .join('text')
+    .attr('x', d => d.x + 10)
+    .attr('y', d => d.y + nodeWidth + 40)
+    .text(({ data: d }) => {
+      if (d.deceased) return `Born: ${new Date(d.dob).getFullYear()}`
+      const diff = new Date() - new Date(d.dob)
+      return `Age: ${Math.trunc(diff / (1000 * 60 * 60 * 24 * 365.25))}`
+    })
+    .style('font-weight', '500')
+
   // image
   graphBase
     .append('g')
@@ -100,6 +115,7 @@ const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFam
     .attr('width', nodeWidth)
     .attr('height', nodeWidth)
     .attr('href', 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Solid_black.svg/240px-Solid_black.svg.png')
+    .on('click', (e, d) => setSelectedKey(d.id))
 
   // spouse --------------------------------------------------------------------------------------
   const spouseXOffset = nodeWidth + 20
@@ -134,6 +150,23 @@ const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFam
     .attr('x', d => d.x + spouseXOffset + 10)
     .attr('y', d => d.y + nodeWidth + 20)
     .text(d => find(rawTreeData, rtd => rtd.key === d.data.spouse).name)
+    .style('font-weight', '500')
+
+  // spouse age
+  graphBase
+    .append('g')
+    .selectAll('text')
+    .data(spouseNodes)
+    .join('text')
+    .attr('x', d => d.x + spouseXOffset + 10)
+    .attr('y', d => d.y + nodeWidth + 40)
+    .text(d => find(rawTreeData, rtd => rtd.key === d.data.spouse).name)
+    .text(d => {
+      const spouse = find(rawTreeData, rtd => rtd.key === d.data.spouse)
+      if (spouse.deceased) return `Born: ${new Date(spouse.dob).getFullYear()}`
+      const diff = new Date() - new Date(spouse.dob)
+      return `Age: ${Math.trunc(diff / (1000 * 60 * 60 * 24 * 365.25))}`
+    })
     .style('font-weight', '500')
 
   // image
