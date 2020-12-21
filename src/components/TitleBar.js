@@ -70,7 +70,7 @@ const TitleBar = forwardRef((props, ref) => {
           <Form>
             <Form.Group controlId='formBasicEmail'>
               <Form.Label>Username</Form.Label>
-              <Form.Control type='text' placeholder='Enter email' value={username} onChange={e => setUsername(e.target.value)} />
+              <Form.Control type='text' placeholder='Email' value={username} onChange={e => setUsername(e.target.value)} />
             </Form.Group>
 
             <Form.Group controlId='formBasicPassword'>

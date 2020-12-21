@@ -88,6 +88,8 @@ const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFam
     .attr('y', d => d.y + nodeWidth + 20)
     .text(d => d.data.name)
     .style('font-weight', '500')
+    .style('cursor', 'pointer')
+    .on('click', (e, d) => setSelectedKey(d.id))
 
   // age
   graphBase
@@ -115,6 +117,7 @@ const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFam
     .attr('width', nodeWidth)
     .attr('height', nodeWidth)
     .attr('href', 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Solid_black.svg/240px-Solid_black.svg.png')
+    .style('cursor', 'pointer')
     .on('click', (e, d) => setSelectedKey(d.id))
 
   // spouse --------------------------------------------------------------------------------------
@@ -151,6 +154,8 @@ const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFam
     .attr('y', d => d.y + nodeWidth + 20)
     .text(d => find(rawTreeData, rtd => rtd.key === d.data.spouse).name)
     .style('font-weight', '500')
+    .style('cursor', 'pointer')
+    .on('click', (e, d) => setSelectedKey(find(rawTreeData, rtd => rtd.key === d.data.spouse).key))
 
   // spouse age
   graphBase
@@ -180,4 +185,6 @@ const createD3Chart = ({ current }, rawTreeData, stratifiedFamilies, selectedFam
     .attr('width', nodeWidth)
     .attr('height', nodeWidth)
     .attr('href', 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Solid_black.svg/240px-Solid_black.svg.png')
+    .style('cursor', 'pointer')
+    .on('click', (e, d) => setSelectedKey(find(rawTreeData, rtd => rtd.key === d.data.spouse).key))
 }
