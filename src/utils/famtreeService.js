@@ -4,7 +4,7 @@ import { filter, find } from 'lodash'
 
 import { stratify } from 'd3-hierarchy'
 
-const baseUrl = 'https://famtreeserver.herokuapp.com'
+const baseUrl = 'http://localhost:3001' // 'https://famtreeserver.herokuapp.com'
 
 export const login = async (username, password) => {
   const { data: { token } } = await axios.post(`${baseUrl}/login`, { username, password })

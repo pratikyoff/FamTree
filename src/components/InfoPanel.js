@@ -17,6 +17,8 @@ const InfoPanel = forwardRef((props, ref) => {
   const mother = find(rawTreeData, rtd => rtd.key === selected.mother)
   const childrenArray = filter(rawTreeData, rtd => rtd.father === selectedKey || rtd.mother === selectedKey)
   const spouse = find(rawTreeData, rtd => rtd.key === selected.spouse)
+  const { additionalInfo } = selected
+  const { phones, instagram, facebook, email } = additionalInfo || {}
   return (
     <div
       ref={ref}
@@ -34,6 +36,7 @@ const InfoPanel = forwardRef((props, ref) => {
       <div style={{ display: 'flex', maxWidth: '300px', maxHeight: '280px', flexGrow: '1', padding: '15px' }}>
         <img style={{ width: '100%', height: '100%' }} src={selected.image || 'https://www.flaticon.com/svg/static/icons/svg/660/660252.svg'} />
       </div>
+
       <div style={{ flexGrow: '1', display: 'flex', flexDirection: 'column', padding: '10px', justifyContent: 'space-around' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <img style={{ height: '30px', width: '30px', marginRight: '5px' }} src='user.png' />
@@ -76,18 +79,46 @@ const InfoPanel = forwardRef((props, ref) => {
             </div>
           </div>}
       </div>
-      <div style={{ flexGrow: '1', display: 'flex', flexDirection: 'column' }}>
-        <div>Phone(s)</div>
-        <div>Whatsapp</div>
-        <div>Facebook</div>
-        <div>Instagram</div>
-        <div>Email</div>
+
+      <div style={{ flexGrow: '1', display: 'flex', flexDirection: 'column', padding: '10px', justifyContent: 'space-around' }}>
+        {!isEmpty(phones) &&
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img style={{ height: '30px', width: '30px', marginRight: '5px' }} src='phone.png' />
+            {map(additionalInfo.phones, phone =>
+              <NodePill
+                text={
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {phone.number}{phone.whatsapp && <img style={{ height: '20px', width: '20px', marginLeft: '5px' }} src='whatsapp.png' />}
+                  </div>
+            }
+              />)}
+          </div>}
+        {!isEmpty(facebook) &&
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img style={{ height: '30px', width: '30px', marginRight: '5px' }} src='facebook.svg' />
+            <NodePill text={<a rel='noreferrer' target='_blank' href={`https://www.facebook.com/${facebook}`}>{facebook}</a>} />
+          </div>}
+        {!isEmpty(instagram) &&
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img style={{ height: '30px', width: '30px', marginRight: '5px' }} src='instagram.svg' />
+            <NodePill text={<a rel='noreferrer' target='_blank' href={`https://www.instagram.com/${instagram}`}>{instagram}</a>} />
+          </div>}
+        {!isEmpty(email) &&
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img style={{ height: '30px', width: '30px', marginRight: '5px' }} src='email.svg' />
+            {map(additionalInfo.email, mail =>
+              <NodePill
+                text={<a href={`mailto:${mail}`}>{mail}</a>}
+              />)}
+          </div>}
       </div>
-      <div style={{ flexGrow: '1' }}>
+
+      <div style={{ flexGrow: '1', display: 'flex', flexDirection: 'column', padding: '10px', justifyContent: 'space-around' }}>
         <div>Add Parent</div>
-        <div>Add Children</div>
+        <div>Add Child</div>
         <div>Edit Info</div>
       </div>
+
       <div style={{ position: 'absolute', right: '3px', top: '2px' }} onClick={() => setSelectedKey('')}>
         <img style={{ width: '24px' }} src='https://www.flaticon.com/svg/static/icons/svg/660/660252.svg' />
       </div>

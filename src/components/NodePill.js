@@ -6,7 +6,7 @@ const NodePill = props => {
     <Badge
       variant='warning'
       pill
-      style={{ marginLeft: '3px', fontSize: '0.9em', cursor: 'pointer' }}
+      style={{ marginLeft: '3px', fontSize: '0.9em', cursor: clickFn ? 'pointer' : 'auto' }}
       onClick={clickFn}
     >
       {text}
